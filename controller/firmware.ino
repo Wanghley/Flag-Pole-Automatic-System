@@ -27,7 +27,7 @@ double stepsNeeded = H/(2*PI*radius);
 int roundedStepsNeeded = (int) stepsNeeded;
 
 double bottonStep = 0;
-double upStep,downStep;
+double upStep,downStep, current=0;
 double initial=0, up, down,middle;
 
 void setup() {
@@ -50,122 +50,88 @@ void setup() {
   pinMode(btnMIDDLE, INPUT_PULLUP);
 }
 
-void goUp(){
-  myStepper.step(STEPS_PER_REV*4*roundedStepsNeeded);
-  myStepper.step(STEPS_PER_REV*(stepsNeeded-roundedStepsNeeded));
-}
-
-void goDown(){
-  myStepper.step(-STEPS_PER_REV*4*roundedStepsNeeded);
-  myStepper.step(-STEPS_PER_REV*(stepsNeeded-roundedStepsNeeded));
-}
-
-void goMiddle(int upOrDown){
-  if(upOrDown==1){
-    myStepper.step(((STEPS_PER_REV*4*roundedStepsNeeded)/2));
-    myStepper.step( (STEPS_PER_REV*(stepsNeeded-roundedStepsNeeded)/2));
-  }else{
-    myStepper.step(-((STEPS_PER_REV*4*roundedStepsNeeded)/2));
-    myStepper.step(-(STEPS_PER_REV*(stepsNeeded-roundedStepsNeeded)/2));
+void setPos(int pos){ // 1 up, 0 middle, -1 down
+  Serial.println(current);
+  if(pos==1){
+    if(current<up){
+      myStepper.step((up-current));
+      Serial.println(up-current);
+      current = up;
+    }
+  }else if(pos==-1){ // TODO: Problem on lowering from up when passes by middle
+    if(current>down){
+      myStepper.step((down-current));
+      Serial.println(down-current);
+      current = down;
+    }
+  }else if(pos==0){
+    if(current<middle){
+      myStepper.step((middle-current));
+      current = middle;
+    }
+    else{
+      myStepper.step((current-middle));
+      current = middle;
+    }
   }
+
+  //for debug only
+  Serial.println(current);
+
+
 }
 
 void loop() {
   if(digitalRead(btnMaintanance)==0){
     digitalWrite(ledMaintance, HIGH);
     if(digitalRead(btnUP)==0){
-      myStepper.step(STEPS_PER_REV/16.0);
-      upStep += STEPS_PER_REV/16.0;
-      delay(100);
-      Serial.println(upStep);
+      myStepper.step(STEPS_PER_REV/4.0);
+      upStep += STEPS_PER_REV/4.0;
+      current+=upStep;
+      delay(40);
+      // FOR DEBUG ONLY
+      // Serial.println(current);
     }
     if(digitalRead(btnDOWN)==0){
-      myStepper.step((-STEPS_PER_REV/16.0));
-      downStep -= STEPS_PER_REV/16.0;
-      delay(100);
-      Serial.println(upStep);
+      myStepper.step((-STEPS_PER_REV/4.0));
+      downStep += -STEPS_PER_REV/4.0;
+      current+=downStep;
+      delay(40);
+      // FOR DEBUG ONLY
+      // Serial.println(current);
     }
     if(digitalRead(btnMIDDLE)==0){
-      Serial.println("Entered here");
       up = upStep;
-      down = downStep;
+      down = abs(upStep+downStep);
       middle = (up-down)/2;
-      digitalWrite(ledMaintance, HIGH);
-      delay(200);
-      digitalWrite(ledMaintance, LOW);
-      delay(200);
-      digitalWrite(ledMaintance, HIGH);
-      delay(200);
-      digitalWrite(ledMaintance, LOW);
-      delay(200);
-      digitalWrite(ledMaintance, HIGH);
-      delay(200);
-      digitalWrite(ledMaintance, LOW);
-      delay(200);
-      digitalWrite(ledMaintance, HIGH);
-      delay(200);
+
+      // For debug only
+      Serial.println(up);
+      Serial.println(middle);
+      Serial.println(down);
+
+      blink(ledMaintance,3,300);
     }
   }else{
     digitalWrite(ledMaintance, LOW);
-  }
-
-  if(Serial.available()){
-    char c = Serial.read();
-    if(c=='u'){
-      goUp();
+    if(Serial.available()){
+      char c = Serial.read();
+      if(c=='u'){
+        setPos(1);      
+      }else if(c=='d'){
+        setPos(-1);
+      }else if(c=='m'){
+        setPos(0);
+      }
     }
   }
-
-
-//   while (Serial.available() > 0)
-//  {
-//    //Create a place to hold the incoming message
-//    static char message[MAX_MESSAGE_LENGTH];
-//    static unsigned int message_pos = 0;
-
-//    //Read the next available byte in the serial receive buffer
-//    char inByte = Serial.read();
-
-//    if(inByte=='u'){
-//      if(upOrDown==0.0){
-//        goUp();
-//      }else if(upOrDown==1/2){
-//        goMiddle(1); // Go back up
-//      }
-//      upOrDown = 1.0;
-//    }else if(inByte=='d'){
-//      if(upOrDown==1.0){
-//        goDown();
-//      }else if(upOrDown==1/2){
-//        goMiddle(0); // Go back up
-//      }
-//      upOrDown = 0.0;
-//    }else if(inByte=='m'){
-//      if(upOrDown==0.0){
-//        goMiddle(1);
-//      }else if(upOrDown==1.0){
-//        goMiddle(0); // Go back up
-//      }
-//      upOrDown = .5;
-  //  }
-//  }
 }
 
-// void onestep(){
-// write(1,0,0,0);
-// delay(1);
-// write(1,1,0,0);
-// delay(1);
-// write(0,1,0,0);
-// delay(1);
-// write(0,1,1,0);
-// delay(1);
-// write(0,0,1,0);
-// delay(1);
-// write(0,0,1,1);
-// delay(1);
-// write(0,0,0,1);
-// delay(1);
-// write(1,0,0,1);
-// delay(1);
-// }
+void blink(int port, int repetitions, int duration){
+  for(int i=0;i<repetitions;i++){
+    digitalWrite(port, HIGH);
+    delay(200);
+    digitalWrite(port, LOW);
+    delay(200);
+  } 
+}
