@@ -19,7 +19,7 @@ Stepper myStepper = Stepper(STEPS_PER_REV, A, C, B, D);
 
 double bottonStep = 0;
 double upStep,downStep, current=0;
-double up, down,middle;
+double up,down,middle;
 
 void setup() {
   pinMode(A,OUTPUT);
@@ -39,6 +39,16 @@ void setup() {
   pinMode(btnDOWN, INPUT_PULLUP);
 
   pinMode(btnMIDDLE, INPUT_PULLUP);
+  
+  // Get storaged data from EEPROM
+  up = readIntFromEEPROM(0);
+  middle = readIntFromEEPROM(2);
+  down = readIntFromEEPROM(4);
+
+  // FOR DEBUG ONLY
+  // Serial.println(up);
+  // Serial.println(middle);
+  // Serial.println(down);
 }
 
 void setPos(int pos){ // 1 up, 0 middle, -1 down
@@ -63,10 +73,32 @@ void setPos(int pos){ // 1 up, 0 middle, -1 down
     }
   }
 
-  //for debug only
+  // FOR DEBUG ONLY
   // Serial.println(current);
+}
 
+// Write int data into Arduino EEPROM
+void writeIntIntoEEPROM(int address, int number){ 
+  byte byte1 = number >> 8;
+  byte byte2 = number & 0xFF;
+  EEPROM.write(address, byte1);
+  EEPROM.write(address + 1, byte2);
+}
 
+// Read data from Arduino EEPROM
+int readIntFromEEPROM(int address){
+  byte byte1 = EEPROM.read(address);
+  byte byte2 = EEPROM.read(address + 1);
+  return (byte1 << 8) + byte2;
+}
+
+void blink(int port, int repetitions, int duration){
+  for(int i=0;i<repetitions;i++){
+    digitalWrite(port, HIGH);
+    delay(200);
+    digitalWrite(port, LOW);
+    delay(200);
+  } 
 }
 
 void loop() {
@@ -93,16 +125,20 @@ void loop() {
       down = abs(upStep+downStep);
       middle = (up-down)/2;
 
-      // For debug only
+      // FOR DEBUG ONLY
       // Serial.println(up);
       // Serial.println(middle);
       // Serial.println(down);
+
+      writeIntIntoEEPROM(0,up);
+      writeIntIntoEEPROM(2,middle);
+      writeIntIntoEEPROM(4,down);
 
       blink(ledMaintance,3,300);
     }
   }else{
     digitalWrite(ledMaintance, LOW);
-    if(Serial.available()){
+    if(Serial.available() && up!=-1 && middle!=-1 && down!=-1){
       char c = Serial.read();
       if(c=='u'){
         setPos(1);      
@@ -113,13 +149,4 @@ void loop() {
       }
     }
   }
-}
-
-void blink(int port, int repetitions, int duration){
-  for(int i=0;i<repetitions;i++){
-    digitalWrite(port, HIGH);
-    delay(200);
-    digitalWrite(port, LOW);
-    delay(200);
-  } 
 }
