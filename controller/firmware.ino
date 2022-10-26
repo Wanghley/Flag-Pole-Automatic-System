@@ -65,14 +65,16 @@ void setPos(int pos){ // 1 up, 0 middle, -1 down
       current = down;
     }
   }else if(pos==0){
+    Serial.println(current);
     if(current<middle){
       myStepper.step((middle-current));
       current = middle;
     }
     else{
-      myStepper.step((current-middle));
+      myStepper.step(-(current-middle));
       current = middle;
     }
+    Serial.println(current);
   }
 
   //for debug only
