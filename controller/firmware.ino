@@ -12,23 +12,14 @@
 #define btnMaintanance A3
 #define ledON A4
 #define ledMaintance A5
-// Real steps per revolution is 512. Needed to multiply by 4 for some unknown reason
+
 #define PI 3.1415926535897932384626433832795
-
-const unsigned int MAX_MESSAGE_LENGTH = 1;
-
-const double H = 20.0; //height of the pole in CM
-const double radius = 1.0;
-float upOrDown = 0.0;
 
 Stepper myStepper = Stepper(STEPS_PER_REV, A, C, B, D);
 
-double stepsNeeded = H/(2*PI*radius);
-int roundedStepsNeeded = (int) stepsNeeded;
-
 double bottonStep = 0;
 double upStep,downStep, current=0;
-double initial=0, up, down,middle;
+double up, down,middle;
 
 void setup() {
   pinMode(A,OUTPUT);
@@ -51,21 +42,17 @@ void setup() {
 }
 
 void setPos(int pos){ // 1 up, 0 middle, -1 down
-  Serial.println(current);
   if(pos==1){
     if(current<up){
       myStepper.step((up-current));
-      Serial.println(up-current);
       current = up;
     }
   }else if(pos==-1){ // TODO: Problem on lowering from up when passes by middle
     if(current>down){
       myStepper.step((down-current));
-      Serial.println(down-current);
       current = down;
     }
   }else if(pos==0){
-    Serial.println(current);
     if(current<middle){
       myStepper.step((middle-current));
       current = middle;
@@ -74,11 +61,10 @@ void setPos(int pos){ // 1 up, 0 middle, -1 down
       myStepper.step(-(current-middle));
       current = middle;
     }
-    Serial.println(current);
   }
 
   //for debug only
-  Serial.println(current);
+  // Serial.println(current);
 
 
 }
@@ -108,9 +94,9 @@ void loop() {
       middle = (up-down)/2;
 
       // For debug only
-      Serial.println(up);
-      Serial.println(middle);
-      Serial.println(down);
+      // Serial.println(up);
+      // Serial.println(middle);
+      // Serial.println(down);
 
       blink(ledMaintance,3,300);
     }
