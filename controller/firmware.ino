@@ -5,7 +5,7 @@
 #define B 9
 #define C 10
 #define D 11
-#define STEPS_PER_REV 512 // 11.25° per step
+#define STEPS_PER_REV 200 // 11.25° per step
 #define btnUP 6
 #define btnDOWN 5
 #define btnMIDDLE 7
@@ -27,7 +27,7 @@ void setup() {
   pinMode(C,OUTPUT);
   pinMode(D,OUTPUT);
   myStepper.setSpeed(50);
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   pinMode(ledMaintance, OUTPUT);
   digitalWrite(ledMaintance, LOW);
@@ -141,11 +141,14 @@ void loop() {
     if(Serial.available() && up!=-1 && middle!=-1 && down!=-1){
       char c = Serial.read();
       if(c=='u'){
-        setPos(1);      
+        setPos(1);
+        Serial.println(1);    
       }else if(c=='d'){
         setPos(-1);
+        Serial.println(-1);
       }else if(c=='m'){
         setPos(0);
+        Serial.println(0);
       }
     }
   }
