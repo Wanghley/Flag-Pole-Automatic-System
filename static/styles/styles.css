@@ -1,0 +1,90 @@
+body {
+    width: 100%;
+    background: bisque;
+    margin: auto;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+}
+
+h1 {
+    margin: 1em auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.flagGroupButton {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+
+    width: 75%;
+    height: 50px;
+    margin-bottom: 10px;
+    border: 2px solid #4CAF50;
+    background-color: cornsilk;
+
+    cursor: pointer;
+}
+
+.flagGroupButton:active {
+    background-color: white;
+    color: black;
+}
+
+.divideFlagsName {
+    border-bottom: 2px solid black;
+    border-top: 2px;
+    width: 94%;
+    margin: 10px 3% 10px 3%;
+}
+
+.flagTitle {
+    text-align: left;
+    font-size: 25px;
+    display: inline-block;
+    width: 50%;
+}
+
+.change {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+
+    width: 15%;
+    height: 40px;
+    
+    border: 1px solid #4CAF50;
+    background-color: cornsilk;
+
+    cursor: pointer;
+}
+
+.change:active {
+    background-color: white;
+    color: black;
+}
+
+.return {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10px;
+
+    width: 15%;
+    height: 1%;
+
+    margin-left: 1%;
+    margin-bottom: 0%;
+    
+    border: 1px solid #4CAF50;
+    background-color: cornsilk;
+
+    cursor: pointer;
+}
+
+.return:active {
+    background-color: white;
+    color: black;
+}
+
+/* .maintenance {
+    
+    tbd
+
+} */

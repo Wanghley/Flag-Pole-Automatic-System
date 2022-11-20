@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}"/>
+  </head>
+
+  <body>
+    <a href="/"><button class="return">Return to Homepage</button></a>
+    {% block body %}{% endblock %}
+
+    <div>
+        <p class="flagTitle">United States National Flag</p>
+
+        <button class="change">Full</button>
+        <button class="change">Half</button>
+
+        <div>Currently at: N/A</div>
+
+        <div class="divideFlagsName"></div>
+    </div>
+
+    <div>
+        <p class="flagTitle">North Carolina State Flag</p>
+
+        <button class="change">Full</button>
+        <button class="change">Half</button>
+
+        <div class="shiftUp">Currently at: N/A</div>
+
+        <div class="divideFlagsName"></div>
+    </div>
+
+    <div>
+        <p class="flagTitle">Duke Flag</p>
+        
+        <a href="/full"><button class="change" name="duke_full">Full</button></a>
+        <a href="/half"><button class="change" name="duke_half">Half</button></a>
+
+        <div class="shiftUp">Currently at: N/A</div>
+
+        <div class="divideFlagsName"></div>
+    </div>
+
+  </body>
+
+</html>
