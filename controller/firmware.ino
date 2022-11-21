@@ -1,32 +1,31 @@
-#include <Stepper.h>
+#include <AccelStepper.h>
 #include <EEPROM.h>
 
-#define A 8
-#define B 9
-#define C 10
-#define D 11
-#define STEPS_PER_REV 200 // 11.25° per step
+// Define stepper motor connections and motor interface type. Motor interface type must be set to 1 when using a driver:
+#define dirPin 2
+#define stepPin 3
+#define motorInterfaceType 1
+#define STEPS_PER_REV 1600 // steps needed for Nema 23
 #define btnUP 6
 #define btnDOWN 5
 #define btnMIDDLE 7
 #define btnMaintanance A3
 #define ledON A4
 #define ledMaintance A5
+#define speed 3000
 
-#define PI 3.1415926535897932384626433832795
-
-Stepper myStepper = Stepper(STEPS_PER_REV, A, C, B, D);
+// Create a new instance of the AccelStepper class:
+AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
 
 double bottonStep = 0;
 double upStep,downStep, current=0;
 double up,down,middle;
 
 void setup() {
-  pinMode(A,OUTPUT);
-  pinMode(B,OUTPUT);
-  pinMode(C,OUTPUT);
-  pinMode(D,OUTPUT);
-  myStepper.setSpeed(50);
+  // Set the maximum speed and acceleration:
+  stepper.setMaxSpeed(3000);
+  stepper.setAcceleration(100000);
+
   Serial.begin(115200);
 
   pinMode(ledMaintance, OUTPUT);
@@ -51,33 +50,6 @@ void setup() {
   // Serial.println(down);
 }
 
-void setPos(int pos){ // 1 up, 0 middle, -1 down
-  if(pos==1){
-    if(current<up){
-      myStepper.step((up-current));
-      current = up;
-    }
-  }else if(pos==-1){ // TODO: Problem on lowering from up when passes by middle
-    if(current>down){
-      myStepper.step((down-current));
-      current = down;
-    }
-  }else if(pos==0){
-    if(current<middle){
-      myStepper.step((middle-current));
-      current = middle;
-    }
-    else{
-      myStepper.step(-(current-middle));
-      current = middle;
-    }
-  }
-
-  // FOR DEBUG ONLY
-  // Serial.println(current);
-}
-
-// Write int data into Arduino EEPROM
 void writeIntIntoEEPROM(int address, int number){ 
   byte byte1 = number >> 8;
   byte byte2 = number & 0xFF;
@@ -92,6 +64,40 @@ int readIntFromEEPROM(int address){
   return (byte1 << 8) + byte2;
 }
 
+void setPos(int pos){ // 1 up, 0 middle, -1 down
+  if(pos==1){
+    if(current<up){
+      while(stepper.isRunning()){}
+      stepper.move((up-current));
+      stepper.runToPosition();
+      current = up;
+    }
+  }else if(pos==-1){ // TODO: Problem on lowering from up when passes by middle
+    if(current>down){
+      while(stepper.isRunning()){}
+      stepper.move((down-current));
+      stepper.runToPosition();
+      current = down;
+    }
+  }else if(pos==0){
+    if(current<middle){
+      while(stepper.isRunning()){}
+      stepper.move((middle-current));
+      stepper.runToPosition();
+      current = middle;
+    }
+    else{
+      while(stepper.isRunning()){}
+      stepper.move(-(current-middle));
+      stepper.runToPosition();
+      current = middle;
+    }
+  }
+
+  // FOR DEBUG ONLY
+  // Serial.println(current);
+}
+
 void blink(int port, int repetitions, int duration){
   for(int i=0;i<repetitions;i++){
     digitalWrite(port, HIGH);
@@ -102,23 +108,40 @@ void blink(int port, int repetitions, int duration){
 }
 
 void loop() {
+  // Set the target position:
+  // stepper.moveTo(8000);
+  // // Run to target position with set speed and acceleration/deceleration:
+  // stepper.runToPosition();
+
+  // delay(1000);
+
+  // // Move back to zero:
+  // stepper.moveTo(0);
+  // stepper.runToPosition();
+
+  // delay(1000);
+
   if(digitalRead(btnMaintanance)==0){
     digitalWrite(ledMaintance, HIGH);
-    if(digitalRead(btnUP)==0){
-      myStepper.step(STEPS_PER_REV/4.0);
-      upStep += STEPS_PER_REV/4.0;
+    if(digitalRead(btnUP)==0 && !stepper.isRunning()){
+      stepper.setSpeed(speed);
+      stepper.move(STEPS_PER_REV);
+      upStep += STEPS_PER_REV;
       current+=upStep;
-      delay(40);
       // FOR DEBUG ONLY
       // Serial.println(current);
+      stepper.runToPosition();
+      delay(40);
     }
-    if(digitalRead(btnDOWN)==0){
-      myStepper.step((-STEPS_PER_REV/4.0));
-      downStep += -STEPS_PER_REV/4.0;
+    if(digitalRead(btnDOWN)==0  && !stepper.isRunning()){
+      stepper.setSpeed(-speed);
+      stepper.move(-STEPS_PER_REV);
+      downStep += -STEPS_PER_REV;
       current+=downStep;
-      delay(40);
       // FOR DEBUG ONLY
       // Serial.println(current);
+      stepper.runToPosition();
+      delay(40);
     }
     if(digitalRead(btnMIDDLE)==0){
       up = upStep;
