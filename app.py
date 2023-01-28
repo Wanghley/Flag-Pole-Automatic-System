@@ -13,6 +13,10 @@ def index():
 def allen():
     return render_template("allen.html")
 
+@app.route("/white-lecture-hall")
+def wlh():
+    return render_template("wlh.html")
+
 @app.route("/full")
 def full():
     r=requests.post("http://192.168.4.3/set-position", headers={'Content-Type':'application/json'}, json={'id':'usa','pos':1})
@@ -23,9 +27,10 @@ def half():
     r=requests.post("http://192.168.4.3/set-position", headers={'Content-Type':'application/json'}, json={'id':'usa','pos':0})
     return render_template("allen.html")
 
-@app.route("/white-lecture-hall")
-def wlh():
-    return render_template("wlh.html")
+@app.route("/maintenance")
+def lower():
+    r=requests.post("http://192.168.4.3/set-position", headers={'Content-Type':'application/json'}, json={'id':'usa','pos':-1})
+    return render_template("allen.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
