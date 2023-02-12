@@ -1,22 +1,38 @@
+from microdot import Microdot
 import network
 import socket
 from time import sleep
-from picozero import pico_temp_sensor, pico_led
+import ubinascii
 from machine import Pin
 
+app = Microdot()
 ssid = 'DukeOpen'
 password = ''
-hallSenPin = 2
+wlan = network.WLAN(network.STA_IF)
+
+#Pins
+hallSenUpPin = 2
+hallSenMidPin = 3
+hallSenBotPin = 5
 motorPin1 = 4
 motorPin2 = 5
 
 motor1a = Pin(motorPin1, Pin.OUT)
 motor1b = Pin(motorPin2, Pin.OUT)
-hall_sens = Pin(hallSenPin, Pin.IN)
+hallSenUpPin = Pin(hallSenUpPin, Pin.IN)
 
-def connect():
+
+@app.route('/')
+def index(request):
+    return """
+    IP: %s
+    MASK: %s
+    MACADDR: %s
+    """ % (wlan.ifconfig()[0],wlan.ifconfig()[1],format_mac_addr(ubinascii.hexlify(wlan.config('mac')).decode()))
+    
+
+def __setup__():
     #Connect to WLAN
-    wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
     while wlan.isconnected() == False:
@@ -25,27 +41,54 @@ def connect():
     print("Successfully connected to",ssid)
     print("IP: "+wlan.ifconfig()[0])
     
-def up():
+def format_mac_addr(addr):
+
+    mac_addr = addr
+    mac_addr = mac_addr.upper()
+    
+    new_mac = ""
+    
+    for i in range(0, len(mac_addr),2):
+        #print(mac_addr[i] + mac_addr[i+1])
+        
+        if (i == len(mac_addr) - 2):
+            new_mac = new_mac + mac_addr[i] + mac_addr[i+1]
+        else:
+            new_mac = new_mac + mac_addr[i] + mac_addr[i+1] + ":"
+    return new_mac
+
+def __up__():
     motor1a.high()
     motor1b.low()
-    while hall_sens.value()!=0:
+    while hallSenUpPin.value()!=0:
        continue
-    stop()
-   
-def down():
-   motor1a.low()
-   motor1b.high()
-   while hall_sens.value()!=0:
-       continue
-    stop()
-   
-def stop():
+    __stop__()
+    
+def __down__():
+    motor1a.low()
+    motor1b.high()
+    while hallSenUpPin.value()!=0:
+        print(hallSenUpPin.value())
+        continue
+    __stop__()
+
+def __stop__():
     motor1a.low()
     motor1b.low()
+    
+@app.route('/up')
+def goUp(request):
+    __up__()
+    
+@app.route('/stop')
+def goUp(request):
+    __stop__()
 
-# try:
-#     connect()
-# except KeyboardInterrupt:
-#     machine.reset()
+if __name__ == "__main__":
+    try:
+        __setup__()
+    except KeyboardInterrupt:
+        machine.reset()
+        
+    app.run(debug=True,port=80)
 
-up()
