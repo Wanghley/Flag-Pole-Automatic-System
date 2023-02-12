@@ -9,6 +9,8 @@ app = Microdot()
 ssid = 'DukeOpen'
 password = ''
 wlan = network.WLAN(network.STA_IF)
+authors = "Wanghley Soares Martins (@wanghley)"
+duke = "Duke University - Pratt School of Engineering"
 
 #Pins
 hallSenUpPin = 2
@@ -28,7 +30,10 @@ def index(request):
     IP: %s
     MASK: %s
     MACADDR: %s
-    """ % (wlan.ifconfig()[0],wlan.ifconfig()[1],format_mac_addr(ubinascii.hexlify(wlan.config('mac')).decode()))
+    
+    DEVELOPER: %s
+    %s
+    """ % (wlan.ifconfig()[0],wlan.ifconfig()[1],format_mac_addr(ubinascii.hexlify(wlan.config('mac')).decode()),authors,duke)
     
 
 def __setup__():
