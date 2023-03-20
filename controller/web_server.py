@@ -81,11 +81,11 @@ def __stop__():
     motor1a.low()
     motor1b.low()
     
-@app.route('/up')
+@app.route('/up',methods=['POST'])
 def goUp(request):
     __up__()
     
-@app.route('/stop')
+@app.route('/stop',methods=['POST'])
 def goUp(request):
     __stop__()
 
