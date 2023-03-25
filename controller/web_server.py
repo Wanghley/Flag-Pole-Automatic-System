@@ -84,6 +84,10 @@ def __stop__():
 @app.route('/up',methods=['POST'])
 def goUp(request):
     __up__()
+
+@app.route('/down',methods=['POST'])
+def goUp(request):
+    __down__()
     
 @app.route('/stop',methods=['POST'])
 def goUp(request):
