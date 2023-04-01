@@ -34,10 +34,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">Remotely Controlled Flag-Hoisting Device</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Revolutionizing the way any institution hoists its flags! Our team of aspirant engineers at the Duke Pratt School of Engineering have designed a cutting-edge, remotely controlled flag-raising system that eliminates the need for manual labor and reduces costs for the university. With our innovative technology, flag heights can be adjusted safely and easily from any location with Wi-Fi access, making it a reliable and affordable solution. Say goodbye to labor costs and health risks associated with manual flag hoisting and hello to efficient and automated flag-raising with our state-of-the-art system!
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
