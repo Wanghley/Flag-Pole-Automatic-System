@@ -242,7 +242,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [issues-shield]: https://img.shields.io/github/issues/Wanghley/Flag-Pole-Automatic-System.svg?style=for-the-badge
 [issues-url]: https://github.com/Wanghley/Flag-Pole-Automatic-System/issues
 [license-shield]: https://img.shields.io/github/license/Wanghley/Flag-Pole-Automatic-System.svg?style=for-the-badge
-[license-url]: https://github.com/Wanghley/Flag-Pole-Automatic-System/blob/master/LICENSE.txt
+[license-url]: https://github.com/Wanghley/Flag-Pole-Automatic-System/blob/master/LICENSE.md
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/wanghley
 [product-screenshot]: images/screenshot.png
