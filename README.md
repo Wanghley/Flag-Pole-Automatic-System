@@ -30,7 +30,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/Wanghley/Flag-Pole-Automatic-System">
     <img src="docs/Remotely Controlled Flag-Hoisting Device.png" alt="Logo" width="100" height="100">
   </a>
 
@@ -39,14 +39,14 @@
   <p align="center">
     Revolutionizing the way any institution hoists its flags! Our team of aspirant engineers at the Duke Pratt School of Engineering have designed a cutting-edge, remotely controlled flag-raising system that eliminates the need for manual labor and reduces costs for the university. With our innovative technology, flag heights can be adjusted safely and easily from any location with Wi-Fi access, making it a reliable and affordable solution. Say goodbye to labor costs and health risks associated with manual flag hoisting and hello to efficient and automated flag-raising with our state-of-the-art system!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Wanghley/Flag-Pole-Automatic-System"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/Wanghley/Flag-Pole-Automatic-System">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/Wanghley/Flag-Pole-Automatic-System/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/Wanghley/Flag-Pole-Automatic-System/issues">Request Feature</a>
   </p>
 </div>
 
