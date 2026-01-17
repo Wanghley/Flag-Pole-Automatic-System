@@ -6,8 +6,8 @@ import ubinascii
 from machine import Pin
 
 app = Microdot()
-ssid = 'DukeOpen'
-password = ''
+ssid = 'AP-HalfMasters'
+password = '987654321'
 wlan = network.WLAN(network.STA_IF)
 authors = "Wanghley Soares Martins (@wanghley)"
 duke = "Duke University - Pratt School of Engineering"
@@ -35,6 +35,25 @@ def index(request):
     %s
     """ % (wlan.ifconfig()[0],wlan.ifconfig()[1],format_mac_addr(ubinascii.hexlify(wlan.config('mac')).decode()),authors,duke)
     
+@app.post('/up')
+def goUp(request):
+    __up__()
+
+@app.route('/down',methods=['POST'])
+def goUp(request):
+    __down__()
+    
+@app.route('/stop',methods=['POST'])
+def goUp(request):
+    __stop__()
+    
+@app.errorhandler(404)
+def not_found(request):
+    return 'Not found'
+
+@app.errorhandler(RuntimeError)
+def runtime_error(request, exception):
+    return 'Runtime error'
 
 def __setup__():
     #Connect to WLAN
@@ -45,6 +64,7 @@ def __setup__():
         sleep(1)
     print("Successfully connected to",ssid)
     print("IP: "+wlan.ifconfig()[0])
+    print("IP: "+wlan.ifconfig()[1])
     
 def format_mac_addr(addr):
 
@@ -80,18 +100,6 @@ def __down__():
 def __stop__():
     motor1a.low()
     motor1b.low()
-    
-@app.route('/up',methods=['POST'])
-def goUp(request):
-    __up__()
-
-@app.route('/down',methods=['POST'])
-def goUp(request):
-    __down__()
-    
-@app.route('/stop',methods=['POST'])
-def goUp(request):
-    __stop__()
 
 if __name__ == "__main__":
     try:
@@ -99,5 +107,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         machine.reset()
         
-    app.run(debug=True,port=80)
+    app.run(host='0.0.0.0',debug=True,port=80, ssl=None)
+
 
